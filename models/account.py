@@ -19,10 +19,10 @@ class Account:
         return cls(username, password, website)
 
     def create(self, user):
-        f = Fernet(get_key())
-        encoded_password = self.password.encode()
-        encrypted_password = f.encrypt(encoded_password)
-
+        # f = Fernet(get_key())
+        # encoded_password = self.password.encode()
+        # encrypted_password = f.encrypt(encoded_password)
+        encrypted_password = Db.encrypt_password(self.password)
         Db.cur.execute('SELECT id FROM User WHERE name = ?', (user.username,))
         user_id = Db.cur.fetchone()
         Db.cur.execute(
@@ -40,9 +40,7 @@ class Account:
             print('Username did not match our records.')
         else:
             password = data[0]
-            f = Fernet(get_key())
-            decrypted_password = f.decrypt(password)
-            decoded_password = decrypted_password.decode()
+            decoded_password = Db.decode_password(password)
             print(f'Password: {decoded_password}')
             print(f'Site: {data[1]}')
 
@@ -55,9 +53,7 @@ class Account:
             print('There are no records for this site. Please, make sure there are no spelling errors.')
         else:
             password = data[1]
-            f = Fernet(get_key())
-            decrypted_password = f.decrypt(password)
-            decoded_password = decrypted_password.decode()
+            decoded_password = Db.decode_password(password)
             print(f'Username: {data[0]}')
             print(f'Password: {decoded_password}')
 
@@ -68,7 +64,8 @@ class Account:
         if data is None:
             print('You don\'t have any accounts.')
         for account in data:
-            print(f'#{account[0]}\nUsername: {account[1]}\nPassword: {account[2]}\nWebsite: {account[3]}\n')
+            decoded_password = Db.decode_password(account[2])
+            print(f'#{account[0]}\nUsername: {account[1]}\nPassword: {decoded_password}\nWebsite: {account[3]}\n')
 
     @staticmethod
     def remove():
