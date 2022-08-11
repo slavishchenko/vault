@@ -1,0 +1,3 @@
+*.sqlite
+key.txt
+__pycache__
