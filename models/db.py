@@ -1,4 +1,7 @@
 import sqlite3
+from cryptography.fernet import Fernet
+
+from key import get_key
 
 
 class Db:
@@ -25,3 +28,14 @@ class Db:
             )'''
         )
     
+    @staticmethod
+    def encrypt_password(password):
+        f = Fernet(get_key())
+        encoded_password = password.encode()
+        return f.encrypt(encoded_password) 
+
+    @staticmethod
+    def decode_password(password):
+        f = Fernet(get_key())
+        decrypted_password = f.decrypt(password)
+        return decrypted_password.decode() 
