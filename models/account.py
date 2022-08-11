@@ -19,9 +19,6 @@ class Account:
         return cls(username, password, website)
 
     def create(self, user):
-        # f = Fernet(get_key())
-        # encoded_password = self.password.encode()
-        # encrypted_password = f.encrypt(encoded_password)
         encrypted_password = Db.encrypt_password(self.password)
         Db.cur.execute('SELECT id FROM User WHERE name = ?', (user.username,))
         user_id = Db.cur.fetchone()
