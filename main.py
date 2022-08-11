@@ -68,7 +68,7 @@ def main_menu(user):
 				print('\n')
 				return_to_top_menu(user)
 			case 5:
-				Account.see_all()
+				Account.see_all(user)
 				print('\n')
 				return_to_top_menu(user)
 			case 6:

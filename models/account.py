@@ -62,11 +62,11 @@ class Account:
             print(f'Password: {decoded_password}')
 
     @staticmethod
-    def see_all():
-        Db.cur.execute('SELECT * FROM Account')
+    def see_all(user):
+        Db.cur.execute('SELECT * FROM Account WHERE owner = ?', (user.get_id(),))
         data = Db.cur.fetchall()
         for account in data:
-            print(f'Username: {account[0]}\nPassword: {account[1]}\nWebsite: {account[2]}\n')
+            print(f'#{account[0]}\nUsername: {account[1]}\nPassword: {account[2]}\nWebsite: {account[3]}\n')
 
     @staticmethod
     def remove():

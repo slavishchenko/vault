@@ -48,6 +48,10 @@ class User:
             else:
                 print('You\'ve entered a wrong password.')
                 return 'error'
+                
+    def get_id(self):
+        Db.cur.execute('SELECT id FROM User WHERE name = ?', (self.username,))
+        return Db.cur.fetchone()[0]
 
     def __str__(self):
         return self.username
