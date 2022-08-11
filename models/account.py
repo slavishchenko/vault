@@ -26,8 +26,8 @@ class Account:
         Db.cur.execute('SELECT id FROM User WHERE name = ?', (user.username,))
         user_id = Db.cur.fetchone()
         Db.cur.execute(
-            'INSERT INTO Account (id, uname, password, site, owner) VALUES (?,?,?,?,?)',
-            (1, self.username, encrypted_password, self.website, user_id[0])
+            'INSERT INTO Account (uname, password, site, owner) VALUES (?,?,?,?)',
+            (self.username, encrypted_password, self.website, user_id[0])
         )
         Db.connection.commit()
 
@@ -65,6 +65,8 @@ class Account:
     def see_all(user):
         Db.cur.execute('SELECT * FROM Account WHERE owner = ?', (user.get_id(),))
         data = Db.cur.fetchall()
+        if data is None:
+            print('You don\'t have any accounts.')
         for account in data:
             print(f'#{account[0]}\nUsername: {account[1]}\nPassword: {account[2]}\nWebsite: {account[3]}\n')
 

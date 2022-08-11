@@ -32,16 +32,16 @@ class User:
 
     def login(self):
         Db.cur.execute('SELECT name FROM User WHERE name = ?', (self.username,))
-        data = Db.cur.fetchone()
-        if data is None:
+        name = Db.cur.fetchone()[0]
+        if name is None:
             print('You need to register first.')  
             return 'error'
         else:
-            Db.cur.execute('SELECT pass FROM User WHERE name = ?', (self.username,))
-            pwd = Db.cur.fetchone()
+            Db.cur.execute('SELECT pass FROM User WHERE name = ?', (name,))
+            password = Db.cur.fetchone()
             f = Fernet(get_key())
-            decrypted_pass = f.decrypt(pwd[0])
-            decoded_password = decrypted_pass.decode()
+            decrypted_password = f.decrypt(password[0])
+            decoded_password = decrypted_password.decode()
             Db.connection.commit()
             if decoded_password == self.password:
                 return 'success'
