@@ -18,26 +18,26 @@ class User:
         return cls(username, password)
 
     def register(self):
-        Db.cur.execute('SELECT name FROM Users WHERE name = ?', (self.username,))
+        Db.cur.execute('SELECT name FROM User WHERE name = ?', (self.username,))
         data = Db.cur.fetchone()
         if data is None:
             f = Fernet(get_key())
             encoded_password = self.password.encode()
             encrypted_password = f.encrypt(encoded_password)
-            Db.cur.execute('INSERT INTO Users (name, pass) VALUES (?,?)', (self.username, encrypted_password))
+            Db.cur.execute('INSERT INTO User (name, pass) VALUES (?,?)', (self.username, encrypted_password))
             Db.connection.commit()
         else:
             print('Username already exists.')
         print('Success!')
 
     def login(self):
-        Db.cur.execute('SELECT name FROM Users WHERE name = ?', (self.username,))
+        Db.cur.execute('SELECT name FROM User WHERE name = ?', (self.username,))
         data = Db.cur.fetchone()
         if data is None:
             print('You need to register first.')  
             return 'error'
         else:
-            Db.cur.execute('SELECT pass FROM Users WHERE name = ?', (self.username,))
+            Db.cur.execute('SELECT pass FROM User WHERE name = ?', (self.username,))
             pwd = Db.cur.fetchone()
             f = Fernet(get_key())
             decrypted_pass = f.decrypt(pwd[0])

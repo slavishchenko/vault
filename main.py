@@ -23,6 +23,7 @@ def main():
 			case 2:
 				user = User.get()
 				User.register(user)
+				main_menu(user)
 			case 3:
 				print('Exiting...')
 				quit()
@@ -51,32 +52,32 @@ def main_menu(user):
 		match selected_option:
 			case 1:
 				account = Account.get()
-				Account.create(account)
+				Account.create(account, user)
 				print('Account saved!')
 				print('\n')
-				return_to_top_menu()
+				return_to_top_menu(user)
 			case 2:
 				Account.info()
-				return_to_top_menu()
+				return_to_top_menu(user)
 			case 3:
 				Account.search_by_site()
-				return_to_top_menu()
+				return_to_top_menu(user)
 			case 4:
 				Account.remove()
 				print('Account removed!')
 				print('\n')
-				return_to_top_menu()
+				return_to_top_menu(user)
 			case 5:
 				Account.see_all()
 				print('\n')
-				return_to_top_menu()
+				return_to_top_menu(user)
 			case 6:
 				quit()
 	else:
 		print('Please, enter a numeric value')
 
 
-def return_to_top_menu():
+def return_to_top_menu(user):
 	OPTIONS = [x for x in range(1, 3)]
 	menu = input('Menu:\n\n1. Back to top menu \n2. Exit\n')
 
@@ -85,7 +86,7 @@ def return_to_top_menu():
 
 		match selected_option:
 			case 1:
-				main_menu()    
+				main_menu(user)    
 			case 2:
 				quit()
 

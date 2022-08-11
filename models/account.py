@@ -22,16 +22,19 @@ class Account:
         f = Fernet(get_key())
         encoded_password = self.password.encode()
         encrypted_password = f.encrypt(encoded_password)
+
+        Db.cur.execute('SELECT id FROM User WHERE name = ?', (user.username,))
+        user_id = Db.cur.fetchone()
         Db.cur.execute(
-            'INSERT INTO Accounts (uname, password, site) VALUES (?,?,?)',
-            (self.username, encrypted_password, self.website)
+            'INSERT INTO Account (id, uname, password, site, owner) VALUES (?,?,?,?,?)',
+            (1, self.username, encrypted_password, self.website, user_id[0])
         )
         Db.connection.commit()
 
     @staticmethod
     def info():
         username = input('Username: ')
-        Db.cur.execute('SELECT password, site FROM Accounts WHERE uname = ?', (username,))
+        Db.cur.execute('SELECT password, site FROM Account WHERE uname = ?', (username,))
         data = Db.cur.fetchone()
         if data is None:
             print('Username did not match our records.')
@@ -46,7 +49,7 @@ class Account:
     @staticmethod
     def search_by_site():
         website = input('Enter the site name: ')
-        Db.cur.execute('SELECT uname, password FROM Accounts WHERE site = ?', (website,))
+        Db.cur.execute('SELECT uname, password FROM Account WHERE site = ?', (website,))
         data = Db.cur.fetchone()
         if data is None:
             print('There are no records for this site. Please, make sure there are no spelling errors.')
@@ -60,7 +63,7 @@ class Account:
 
     @staticmethod
     def see_all():
-        Db.cur.execute('SELECT * FROM Accounts')
+        Db.cur.execute('SELECT * FROM Account')
         data = Db.cur.fetchall()
         for account in data:
             print(f'Username: {account[0]}\nPassword: {account[1]}\nWebsite: {account[2]}\n')
@@ -68,6 +71,6 @@ class Account:
     @staticmethod
     def remove():
         username = input('Enter the username: ')
-        Db.cur.execute('DELETE FROM Accounts WHERE uname = ?', (username,))
+        Db.cur.execute('DELETE FROM Account WHERE uname = ?', (username,))
         Db.connection.commit()
     

@@ -7,6 +7,21 @@ class Db:
 
     @classmethod
     def create_tables(cls):
-        cls.cur.execute('CREATE TABLE IF NOT EXISTS Users (name TEXT, pass BLOB)')
-        cls.cur.execute('CREATE TABLE IF NOT EXISTS Accounts (uname TEXT, password BLOB, site TEXT)')
+        cls.cur.execute('''
+            CREATE TABLE IF NOT EXISTS User (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, 
+                name TEXT, 
+                pass BLOB
+            )'''
+        )
+        cls.cur.execute('''
+            CREATE TABLE IF NOT EXISTS Account (
+                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+                uname TEXT, 
+                password BLOB, 
+                site TEXT, 
+                owner INTEGER,
+                FOREIGN KEY(owner) REFERENCES User(user_id)
+            )'''
+        )
     
